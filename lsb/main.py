@@ -2,12 +2,11 @@ import os
 import cv2
 import LSBSteg
 
-# Path utama
-cover_root = r"E:\LSB Steg\LSB-Steganography\image\cover"
-output_root = r"E:\LSB Steg\LSB-Steganography\image\stegano-2"
-output_subdir = "lsb"  # bisa kosong "" kalau gak mau ada subfolder tambahan
 
-# Teks yang ingin disisipkan
+cover_root = r"path\to\directory"
+output_root = r"path\to\directory"
+output_subdir = "lsb"
+
 secret_text = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
@@ -29,24 +28,20 @@ def process_file(input_path, output_path, filename):
         print(f"❌ Gagal membaca gambar: {filename}")
         return
 
-    # Encode teks ke dalam gambar
     steg = LSBSteg.LSBSteg(image)
     img_encoded = steg.encode_text(secret_text)
 
-    # Simpan gambar hasil
     cv2.imwrite(output_path, img_encoded)
     print(f"✅ Disimpan ke: {output_path}")
 
 
 def main():
     for root, _, files in os.walk(cover_root):
-        rel_path = os.path.relpath(root, cover_root)  # relatif terhadap cover_root
+        rel_path = os.path.relpath(root, cover_root)
         output_folder = os.path.join(output_root, output_subdir, rel_path)
 
-        # Buat folder output
         os.makedirs(output_folder, exist_ok=True)
 
-        # Filter gambar
         images = [f for f in files if f.lower().endswith((".png", ".jpg", ".jpeg"))]
         if not images:
             continue
